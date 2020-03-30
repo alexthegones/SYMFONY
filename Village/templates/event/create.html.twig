@@ -1,0 +1,34 @@
+{% extends "base.html.twig" %}
+{% form_theme formEvent 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block title 'Créer un événement' %}
+
+{% block body %}
+	<h1 class="display-4 text-center mb-5 shadow p-3 mb-5 bg-white rounded">
+		Création Evénement
+	</h1>
+	{{ form_start(formEvent) }}
+	<div
+		class="container shadow p-3 mb-5 bg-white rounded col-sm-6 col-sm-push-3">
+		{# <div class="col-md-6">
+					{{ form_row(formEvent.Nom) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_row(formEvent.Lieu) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_row(formEvent.Date) }}
+				</div>
+				<div class="col-md-8">
+					{{ form_row(formEvent.Description) }}
+				</div> #}
+		{{ form_widget(formEvent) }}
+
+
+		<button class="btn btn-success">
+			<i class="material-icons">add_box</i>
+			Ajouter l'événement</button>
+	</div>
+	{{ form_end(formEvent) }}
+
+{% endblock %}

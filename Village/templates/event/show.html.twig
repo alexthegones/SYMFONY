@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}{% endblock %}
+{% block title %}Event n°
+	{{ event.id }}
+{% endblock %}
+
+{% block body %}
+	<div class="jumbotron">
+		<h1 class="display-4 mb-3 ">
+			{{ event.nom }}
+		</h1>
+		<p class="lead">
+			{{ event.description }}
+		</p>
+		<hr class="my-4"/>
+		<p>
+			{{ event.lieu }}
+		</p>
+		<p class="lead">
+			{{ event.date | date('d/m/Y') }}
+			à
+			{{event.date | date('H:i')}}
+			<div class="form-group">
+				<a href="{{ path('event_edit', {id: event.id}) }}" input type="button" class="btn btn-primary">
+					<i class="material-icons">create</i>Modifier l'événement
+				</a>
+				<a href="{{ path('event_delete', {id:event.id}) }}" input type="button" class="btn btn-danger">
+					<i class="material-icons">delete</i>
+					Supprimer l'événement
+				</a>
+		</p>
+	</div>
+{% endblock %}

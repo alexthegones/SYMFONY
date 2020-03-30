@@ -1,0 +1,34 @@
+{% extends "base.html.twig" %}
+
+
+{% block title 'Modifier un événement' %}
+
+{% block body %}
+	<h1 class="display-4 text-center shadow p-3 mb-5 bg-white rounded">
+		Modification Evénement
+	</h1>
+	{{ form_start(formEvent) }}
+
+	<div class="container shadow p-3 mb-5 bg-white rounded col-sm-6 col-sm-push-3">
+		{# <div class="col-md-6">
+					{{ form_row(formEvent.Nom) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_row(formEvent.Lieu) }}
+				</div>
+				<div class="col-md-6">
+					{{ form_row(formEvent.Date) }}
+				</div>
+				<div class="col-md-8">
+					{{ form_row(formEvent.Description) }}
+				</div> #}
+		{{ form_widget(formEvent) }}
+		
+		<button type="submit" class="btn btn-primary">
+			<span class="material-icons">
+				edit
+			</span>Modifier</button>
+	</div>
+	{{ form_end(formEvent) }}
+
+{% endblock %}

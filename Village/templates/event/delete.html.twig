@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suppression
+{% endblock %}
+
+{% block body %}
+	<h1 class="display-4 text-center mb-5 shadow p-3 mb-5 bg-white rounded">
+		Avertissement Suppression
+	</h1>
+
+	<div class="alert alert-warning" role="alert">
+		Voulez-vous vraiment supprimer cet événement ?
+		<form action="{{ path('event_delete', {id:event.id}) }}" method="POST">
+			<button type="submit" class="btn btn-success">Confirmer</button>
+			<a href="{{ path('home') }}" input type="button" class="btn btn-light">Annuler</button>
+		</a>
+	</div>
+</form>{% endblock %}

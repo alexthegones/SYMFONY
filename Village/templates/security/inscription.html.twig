@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Inscription' %}
+
+{% block body %}
+<h1 class="display-4 text-center mb-5 shadow p-3 mb-5 bg-white rounded">
+		Inscription
+	</h1>
+    {{ form_start(formRegister) }}
+    <div class="container shadow p-3 mb-5 bg-white rounded col-sm-6 col-sm-push-3">
+		<div class="col-md-6">
+			{{ form_row(formRegister.email) }}
+		</div>
+		<div class="col-md-6">
+			{{ form_row(formRegister.username) }}
+		</div>
+		<div class="col-md-6">
+			{{ form_row(formRegister.password) }}
+		</div>
+        <div class="col-md-6">
+			{{ form_row(formRegister.confirm_password) }}
+		</div>
+		{{ form_widget(formRegister) }}
+		<div class="col-md-6">
+			<button type="submit" class="btn btn-success">
+				<i class="material-icons">add_box</i>
+				S'inscrire</button>
+		</div>
+	</div>
+    {{ form_end(formRegister) }}
+    
+
+{% endblock %}
