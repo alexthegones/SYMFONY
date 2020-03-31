@@ -28,27 +28,32 @@ class EventController extends AbstractController
      * @Route("/Evenement", name="event")
      */
     public function event(PaginatorInterface $paginator, Request $request)
-    {   
-        //Filtrage
-        $search = new EventSearch();
+    {
+        //Filtrage(Search)
+        $search = new Event();
         $formSearch = $this->createForm(EventSearchType::class, $search);
         $formSearch->handleRequest($request);
 
-        //Pagination
-        $donnees = $this->getDoctrine()->getRepository(Event::class)->findAll($search);
+        if ($formSearch->isSubmitted() && $formSearch->isValid()) {
+            //dd($request);
+            $events = $this->repo->findSearch($search);
+        }
 
+        //Récupération de l'ensemble des events de la bdd
+        $donnees = $this->getDoctrine()->getRepository(Event::class)->findAll();
+
+        //Pagination
         $events = $paginator->paginate(
-            $donnees,
+            $donnees,//query(list des events)
             $request->query->getInt('page', 1), //N° de la page en cours, 1 par défaut
             10
         );
-
 
         return $this->render('event/event.html.twig', [
             "currentmenu" => "event",
             "events" => $events,
             "form" => $formSearch->createView()
-            
+
         ]);
     }
     /**

@@ -19,13 +19,11 @@ class Event
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=5, minMessage="Le nom saisi est trop court..")
      */
     private $Nom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=5,max=255)
      */
     private $Lieu;
 
@@ -90,5 +88,10 @@ class Event
         $this->description = $description;
 
         return $this;
+    }
+
+    public function __toString() 
+    {
+        return $this->Nom;
     }
 }

@@ -1,14 +1,15 @@
-
 {% for event in events %}
-	<div class="card text-white bg-secondary mb-3 d-inline-block" style="max-width: 20rem;">
+	<div class="card border-primary mb-3 d-inline-block " style="max-width: 25rem;">
 		<div class="card-header">{{ event.lieu }}</div>
 		<div class="card-body">
 			<h4 class="card-title">{{ event.nom }}</h4>
-			<p class="card-text">{{ event.description }}
-				{{ event.date | date('d/m/Y') }}
-				à
-				{{event.date | date('H:i')}}
-				<a class="btn btn-primary btn-lg" href="{{ path('event_show', {id: event.id}) }} " role="button">
+			<p class="card-text font-weight-light text-justify">{{ event.description }}
+				<div class="font-italic">
+					{{ event.date | date('d/m/Y') }}
+					à
+					{{event.date | date('H:i')}}
+				</div>
+				<a class="btn btn-primary btn-sm active" href="{{ path('event_show', {id: event.id}) }} " role="button">
 					<span class="material-icons">
 						find_in_page
 					</span>

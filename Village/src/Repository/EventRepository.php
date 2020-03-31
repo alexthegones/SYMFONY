@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Event;
-use App\Entity\EventSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
@@ -27,23 +26,20 @@ class EventRepository extends ServiceEntityRepository
 
     public function findByLast(): array
     {
-        return $this->createQueryBuilder('e')
+        return $this->createQueryBuilder('e') //SELECT avec 'e' pour alias de la table event
             ->setMaxResults(5) //limit
             ->orderBy('e.id', "ASC")
             ->getQuery()
             ->getResult();
     }
 
-
-    /*
-    public function findOneBySomeField($value): ?Event
+    public function findSearch($value): array
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            return $this->createQueryBuilder('e')
+                ->andWhere('e.nom LIKE :nom')
+                ->setParameter('nom', '%' .$value. '%' )
+                ->getQuery()
+                ->getResult();
+        
     }
-    */
 }
