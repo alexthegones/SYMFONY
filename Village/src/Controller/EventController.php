@@ -30,13 +30,14 @@ class EventController extends AbstractController
     public function event(PaginatorInterface $paginator, Request $request)
     {
         //Filtrage(Search)
-        $search = new Event();
+        $search = new EventSearch();
         $formSearch = $this->createForm(EventSearchType::class, $search);
         $formSearch->handleRequest($request);
 
-        if ($formSearch->isSubmitted() && $formSearch->isValid()) {
+        if ($formSearch->isSubmitted() && $formSearch->isValid())
+        {
             //dd($request);
-            $events = $this->repo->findSearch($search);
+           $donnees = $this->repo->findSearch($search);
         }
 
         //Récupération de l'ensemble des events de la bdd
@@ -46,7 +47,7 @@ class EventController extends AbstractController
         $events = $paginator->paginate(
             $donnees,//query(list des events)
             $request->query->getInt('page', 1), //N° de la page en cours, 1 par défaut
-            10
+            10 //nb d'event par page
         );
 
         return $this->render('event/event.html.twig', [

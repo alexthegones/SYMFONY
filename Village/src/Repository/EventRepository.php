@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\EventSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
@@ -33,13 +34,15 @@ class EventRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findSearch($value): array
+    public function findSearch(EventSearch $search): array
     {
             return $this->createQueryBuilder('e')
                 ->andWhere('e.nom LIKE :nom')
-                ->setParameter('nom', '%' .$value. '%' )
+                ->setParameter('nom', "% {$search->getNom()} %" )
                 ->getQuery()
                 ->getResult();
         
     }
+
+
 }

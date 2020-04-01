@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Event;
+use App\Entity\EventSearch;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -28,18 +30,17 @@ class EventSearchType extends AbstractType
                     'style' => 'width: 250px'
                 ]
             ]);
+           
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Event::class,
-            'method' => 'post'
+            'data_class' => EventSearch::class,
+            'method' => 'get',
+            'csrf_protection' => false //protection par token desactivée
         ]);
     }
 
-    public function getBlockPrefix()
-    {
-        return '';
-    }
+
 }
