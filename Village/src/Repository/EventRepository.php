@@ -34,11 +34,13 @@ class EventRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findSearch(EventSearch $search): array
-    {
+    public function findSearch($search): array
+    {   
             return $this->createQueryBuilder('e')
-                ->andWhere('e.nom LIKE :nom')
-                ->setParameter('nom', "% {$search->getNom()} %" )
+                ->andWhere('e.Nom LIKE :nom')
+                ->andWhere('e.Lieu LIKE :lieu')
+                ->setParameter('nom', "%{$search->getNom()}%" )
+                ->setParameter('lieu', "%{$search->getLieu()}%" )
                 ->getQuery()
                 ->getResult();
         
