@@ -33,14 +33,14 @@ class EventController extends AbstractController
         $search = new EventSearch();
         $formSearch = $this->createForm(EventSearchType::class, $search);
         $formSearch->handleRequest($request);
-        $donnees = $this->getDoctrine()->getRepository(Event::class)->findAll();
+        $donnees = $this->repo->findByAll();
         if (!empty($search)) {
             if ($formSearch->isSubmitted() && $formSearch->isValid()) {
                 $donnees = $this->repo->findSearch($search);
             }
         } else {
             //Récupération de l'ensemble des events de la bdd
-            $donnees = $this->getDoctrine()->getRepository(Event::class)->findAll();
+            $donnees;
         }
 
         //Pagination

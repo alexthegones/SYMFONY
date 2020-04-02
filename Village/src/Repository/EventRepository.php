@@ -32,6 +32,16 @@ class EventRepository extends ServiceEntityRepository
             ->orderBy('e.id', "ASC")
             ->getQuery()
             ->getResult();
+
+    }
+
+    public function findByAll(): array
+    {   
+        return $this->createQueryBuilder('e') //SELECT avec 'e' pour alias de la table event   
+        ->orderBy('e.Date', "DESC")
+        ->getQuery()
+        ->getResult();
+
     }
 
     public function findSearch($search): array
@@ -41,10 +51,11 @@ class EventRepository extends ServiceEntityRepository
                 ->andWhere('e.Lieu LIKE :lieu')
                 ->setParameter('nom', "%{$search->getNom()}%" )
                 ->setParameter('lieu', "%{$search->getLieu()}%" )
+                ->orderBy('e.Date', "ASC")
                 ->getQuery()
                 ->getResult();
-        
+
     }
 
-
+   
 }

@@ -2,28 +2,52 @@
 
 namespace App\Controller;
 
-use App\Repository\EventRepository;
 use App\Entity\Event;
+use App\Entity\EventSearch;
+use App\Form\EventSearchType;
+use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
 {
+    private $repo;
+    private $em;
+
+    public function __construct(EventRepository $repo, EntityManagerInterface $em)
+    {
+        $this->repo = $repo;
+        $this->em = $em;
+    }
 
     /**
      * @Route("/", name="home")
-     * @param EventRepository $repository
      */
-    public function home() //Injection de la classe 'EventRepository' dependance entre objets
+    public function home(Request $request)
     {
-        //récupère tous les évents
-        $events = $this->getDoctrine()->getRepository(event::class)->findAll();
-        
+        //Filtrage(Search)
+        $search = new EventSearch();
+        $formSearch = $this->createForm(EventSearchType::class, $search);
+        $formSearch->handleRequest($request);
+
+        $events = $this->repo->findByAll();
+        if (!empty($search)) {
+            if ($formSearch->isSubmitted() && $formSearch->isValid()) {
+                $events = $this->repo->findSearch($search);
+            }
+        } else {
+            //Récupération de l'ensemble des events de la bdd
+            $events;
+        }
+
+
         return $this->render('home.html.twig', [
             "currentmenu" => "home", //(variable/parametre)
-            "events" => $events
+            "events" => $events,
+            "form" => $formSearch->createview()
         ]);
     }
 
