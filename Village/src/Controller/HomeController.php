@@ -50,7 +50,6 @@ class HomeController extends AbstractController
             "form" => $formSearch->createview()
         ]);
     }
-
     /**
      * @Route("/Activitee", name="activity")
      */
