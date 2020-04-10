@@ -6,13 +6,18 @@
 
 {% block body %}
 	<div class="jumbotron">
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success" role="alert">
+				{{ message }}
+			</div>
+		{% endfor %}
 		<h1 class="display-4 mb-3 ">
 			{{ event.nom }}
 		</h1>
 		<p class="lead">
 			{{ event.description }}
 		</p>
-		<hr class="my-4"/>
+		<hr class="my-4">
 		<p>
 			{{ event.lieu }}
 		</p>
@@ -31,6 +36,27 @@
 					</button>
 				</div>
 			</form>
+			<hr class="my-4">
+			<div class="col-md-4">
+				<p class="h3 mb-4">
+					<u>Contactez-nous :</u>
+				</p>
+			</div>
+			{{ form_start(formContact) }}
+			<div class="col-md-4">
+				{{ form_row(formContact.nom) }}
+			</div>
+			<div class="col-md-4">
+				{{ form_row(formContact.email) }}
+			</div>
+			<div class="col-md-4">
+				{{ form_row(formContact.message) }}
+			</div>
+			{# {{ form_widget(formContact) }} #}
+			<div class="col-md-4">
+				<button type="submit" class="btn btn-primary">Envoyer</button>
+			</div>
+			{{ form_end(formContact) }}
 		</p>
 	</div>
 {% endblock %}

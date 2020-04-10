@@ -71,13 +71,4 @@ class HomeController extends AbstractController
     }
 
 
-    /**
-     * @Route("/Contact", name="contact")
-     */
-    public function contact()
-    {
-        return $this->render('contact.html.twig', [
-            "currentmenu" => "contact"
-        ]);
-    }
 }

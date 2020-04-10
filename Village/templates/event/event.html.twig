@@ -11,6 +11,11 @@
 	</h1>
 
 	<div class="shadow p-3 mb-5 bg-white rounded">
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success" role="alert">
+				{{ message }}
+			</div>
+		{% endfor %}
 		<h5>
 			<span class="material-icons">
 				search
@@ -28,8 +33,6 @@
 			</div>
 		</div>
 		{{ form_end(form) }}
-
-
 		<div class="pagination">
 			<div class="d-flex justify-content-end mb-2">
 				<span class="material-icons">
@@ -66,5 +69,4 @@
 		</caption>
 	</div>
 {% endblock %}
-{% block javascripts %}
-{% endblock %}
+{% block javascripts %}{% endblock %}

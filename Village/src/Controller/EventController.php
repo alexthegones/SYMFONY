@@ -3,15 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\Contact;
+use App\Form\EventType;
+use App\Form\ContactType;
 use App\Entity\EventSearch;
 use App\Form\EventSearchType;
+use Symfony\Component\Mime\Email;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Form\EventType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EventController extends AbstractController
 {
@@ -69,10 +73,11 @@ class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($event);
-            //$this->addFlash('success', "Evénement ajouté avec success");
             $this->em->flush();
+            $this->addFlash('success', "Evénement ajouté avec success !");
 
             return $this->redirectToRoute('event'); //Redirection vers la page du nouvel événement créer
+            
         }
 
         return $this->render("event/create.html.twig", [
@@ -92,10 +97,10 @@ class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
-            //$this->addFlash('success', "Evénement modifié avec success");
+            $this->addFlash('success', "Evénement modifié avec success !");
 
             return $this->redirectToRoute('event_show', ['id' => $event->getid()]); //Redirection vers la route 'home'
-
+            
         }
         return $this->render("event/edit.html.twig", [
             "formEvent" => $form->createView()
@@ -109,22 +114,41 @@ class EventController extends AbstractController
     {
         $this->em->remove($event);
         $this->em->flush();
-        //$this->addFlash('success', "Suppression avec succès");
+        $this->addFlash('error', "Suppression réussie !");
 
         return $this->redirectToRoute('home'); //Redirection vers la route 'home'
-
-        // return $this->render("event/delete.html.twig",[
-        //     "event" => $event
-        // ]);
     }
     /**
      * @Route("/Evenement/{id}", name="event_show")
      * @param Event $event
      */
-    public function show(Event $event) //Param converter(lien entre objet event et l'id en question au vue de la route)
+    public function show(Event $event, Request $request, MailerInterface $mailer) //Param converter(lien entre objet event et l'id en question au vue de la route)
     {
+        //Envoi d'email
+        $contact = new Contact();
+        $contact->setEvent($contact);
+        $formContact = $this->createForm(ContactType::class, $contact);
+        $formContact->handleRequest($request);
+
+        if ($formContact->isSubmitted() && $formContact->isValid()) {
+            $email = (new Email())
+                ->from('hello@example.com')
+                ->to('you@example.com')
+                //->cc('cc@example.com')
+                //->bcc('bcc@example.com')
+                //->replyTo('fabien@example.com')
+                //->priority(Email::PRIORITY_HIGH)
+                ->subject('Time for Symfony Mailer!')
+                ->text('Sending emails is fun again!')
+                ->html('<p>See Twig integration for better HTML integration!</p>');
+
+            $mailer->send($email);
+            $this->addFlash('success', "Email envoyé avec succès !");
+        }
+        
         return $this->render('event/show.html.twig', [
-            "event" => $event
+            "event" => $event,
+            "formContact" => $formContact->createView()
         ]);
     }
 }
