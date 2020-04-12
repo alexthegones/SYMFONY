@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block body %}
-	<h1 class="text-center mb-5">
-		<u>Contactez-nous :</u>
+	<h1 class="display-4 text-center mb-5 shadow p-3 mb-5 bg-white rounded">
+		Contactez-nous
 	</h1>
 	<div class="container shadow p-3 bg-white rounded col-sm-6 col-sm-push-3">
 		{{ form_start(formContact) }}
@@ -22,12 +22,12 @@
 		{# {{ form_widget(formContact) }} #}
 		<div class="col-md-6">
 			<button type="submit" class="btn btn-primary">Envoyer</button>
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success" id="alertC" role="alert">
+					{{ message }}
+				</div>
+			{% endfor %}
 		</div>
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success" role="alert">
-				{{ message }}
-			</div>
-		{% endfor %}
 		{{ form_end(formContact) }}
 	</div>
 {% endblock %}

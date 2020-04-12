@@ -1,3 +1,4 @@
 body{
-    color: grey;
+    background-image: url("../css/village.jpg");
+    background-size: cover;
 }

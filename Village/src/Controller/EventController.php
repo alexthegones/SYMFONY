@@ -10,6 +10,7 @@ use App\Entity\EventSearch;
 use App\Form\EventSearchType;
 use Symfony\Component\Mime\Email;
 use App\Repository\EventRepository;
+use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,7 +78,7 @@ class EventController extends AbstractController
             $this->addFlash('success', "Evénement ajouté avec success !");
 
             return $this->redirectToRoute('event'); //Redirection vers la page du nouvel événement créer
-            
+
         }
 
         return $this->render("event/create.html.twig", [
@@ -100,7 +101,7 @@ class EventController extends AbstractController
             $this->addFlash('success', "Evénement modifié avec success !");
 
             return $this->redirectToRoute('event_show', ['id' => $event->getid()]); //Redirection vers la route 'home'
-            
+
         }
         return $this->render("event/edit.html.twig", [
             "formEvent" => $form->createView()
@@ -131,21 +132,34 @@ class EventController extends AbstractController
         $formContact->handleRequest($request);
 
         if ($formContact->isSubmitted() && $formContact->isValid()) {
+            //Envoi d'email
             $email = (new Email())
-                ->from('hello@example.com')
+
+                //Expéditeur
+                ->from(new Address($contact->getEmail(), $contact->getNom()))
+                // ->from('hello@example.com')
+
+                //Destinataire
                 ->to('you@example.com')
                 //->cc('cc@example.com')
                 //->bcc('bcc@example.com')
-                //->replyTo('fabien@example.com')
+
+                //Répondre à..
+                ->replyTo($contact->getEmail())
+
                 //->priority(Email::PRIORITY_HIGH)
+
+                //Sujet du mail
                 ->subject('Time for Symfony Mailer!')
                 ->text('Sending emails is fun again!')
-                ->html('<p>See Twig integration for better HTML integration!</p>');
+
+                //Corps du message en format HTML
+                ->html('<p>' . $contact->getmessage() . '</p>');
 
             $mailer->send($email);
             $this->addFlash('success', "Email envoyé avec succès !");
         }
-        
+
         return $this->render('event/show.html.twig', [
             "event" => $event,
             "formContact" => $formContact->createView()

@@ -9,6 +9,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mime\Address;
 
 class ContactController extends AbstractController
 {
@@ -18,23 +19,35 @@ class ContactController extends AbstractController
      */
     public function sendEmail(MailerInterface $mailer, Request $request)
     {
-        //Envoi d'email
         $contact = new Contact();
         $contact->setEvent($contact);
         $formContact = $this->createForm(ContactType::class, $contact);
         $formContact->handleRequest($request);
 
         if ($formContact->isSubmitted() && $formContact->isValid()) {
+            //Envoi d'email
             $email = (new Email())
-                ->from('hello@example.com')
-                ->to('you@example.com')
+
+                //Expéditeur
+                ->from(new Address($contact->getEmail(), 'Alex'))
+                // ->from('hello@example.com')
+
+                //Destinataire
+                ->to('cyelle@sfr.fr')
                 //->cc('cc@example.com')
                 //->bcc('bcc@example.com')
-                //->replyTo('fabien@example.com')
+
+                //Répondre à..
+                ->replyTo($contact->getEmail())
+
                 //->priority(Email::PRIORITY_HIGH)
+
+                //Sujet du mail
                 ->subject('Time for Symfony Mailer!')
                 ->text('Sending emails is fun again!')
-                ->html('<p>See Twig integration for better HTML integration!</p>');
+
+                //Corps du message en format HTML
+                ->html('<p>' . $contact->getmessage() . '</p>');
 
             $mailer->send($email);
             $this->addFlash('success', "Email envoyé avec succès !");
