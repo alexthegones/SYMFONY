@@ -38,27 +38,32 @@
 				</p>
 			</div>
 			<div id="formC">
-				{{ form_start(formContact) }}
-				<div class="col-md-4">
-					{{ form_row(formContact.nom) }}
-				</div>
-				<div class="col-md-4">
-					{{ form_row(formContact.email) }}
-				</div>
-				<div class="col-md-4">
-					{{ form_row(formContact.message) }}
-				</div>
-				{# {{ form_widget(formContact) }} #}
-				<div class="col-md-4">
-					<button type="submit" class="btn btn-primary">Envoyer</button>
+				<div class="row">
+					{{ form_start(formContact) }}
+					<div class="col-md-4">
+						{{ form_row(formContact.nom) }}
+					</div>
+					<div class="col-md-4">
+						{{ form_row(formContact.email) }}
+					</div>
+					<div class="col-md-4">
+						{{ form_row(formContact.message) }}
+					</div>
+					{# {{ form_widget(formContact) }} #}
+					<div class="col-md-4">
+						<button type="submit" class="btn btn-primary">Envoyer</button>
 
-					{% for message in app.flashes('success') %}
-						<div class="alert alert-success" id="alertS" role="alert" style="width:300px">
-							{{ message }}
-						</div>
-					{% endfor %}
+						{% for message in app.flashes('success') %}
+							<div class="alert alert-success" id="alertS" role="alert" style="width:300px">
+								{{ message }}
+							</div>
+						{% endfor %}
+					</div>
+					{{ form_end(formContact) }}
+					<div
+						id="cartediv">{# OpenStrettMap/Leaflet #}
+					</div>
 				</div>
-				{{ form_end(formContact) }}
 			</div>
 		</p>
 	</div>

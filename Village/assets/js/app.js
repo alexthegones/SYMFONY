@@ -26,6 +26,25 @@ date.innerHTML =
   "/" +
   annee;
 
+
+// OpenStreetMap/Leaflet library
+var cartediv = document.getElementById("cartediv");
+cartediv.style.width = "300px";
+cartediv.style.height = "300px";
+
+// Initialise la carte(Coordonnées Nancy)
+var carte = L.map("cartediv").setView([48.692054, 6.184417], 14);
+
+// Charge les 'tuiles'
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution:
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(carte);
+
+// Création d'un marqueur
+var marqueur = L.marker([48.692054, 6.184417]).addTo(carte);
+marqueur.bindPopup("<b>Hello Nancy!</b>.").openPopup();
+
 //Message de confirmation(3sec)
 var alertC = document.getElementById("alertC");
 var time = setInterval(function () {
@@ -38,7 +57,7 @@ var time = setInterval(function () {
   alertS.style.display = "none";
   clearInterval(time);
 }, 3000);
-
+// Afficher/Cacher formulaire de contact
 var formC = document.getElementById("formC");
 var btnC = document.getElementById("btnC");
 
