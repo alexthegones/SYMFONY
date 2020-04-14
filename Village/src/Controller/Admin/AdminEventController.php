@@ -6,54 +6,73 @@ use App\Entity\Event;
 use App\Form\EventType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\EventRepository;
+use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\Request;
 
-
+/**
+ * Par défault la classe prend la route /admin, les autres routes venant se concaténées
+ * @Route("/admin", name="admin_")
+ */
 class AdminEventController extends AbstractController
 {
 
-    private $repo;
+    private $event;
     private $em;
+    private $users;
 
-    public function __construct(EventRepository $repo, EntityManagerInterface $em)
+    public function __construct(EventRepository $event, UserRepository $users, EntityManagerInterface $em)
     {
-        $this->repo = $repo;
+        $this->event = $event;
         $this->em = $em;
+        $this->users = $users;
     }
 
     /**
-     * @Route("/Admin", name="admin_event_index")
+     * @Route("/", name="index")
      */
     public function index()
     {
-        $events = $this->repo->findAll();
-        return $this->render("admin/index.html.twig", [
-            "events" => $events
+
+        return $this->render("Admin/index.html.twig", [
+            'controller_name' => 'AdminEventController'
         ]);
     }
 
     /**
-     * @Route("/Admin/create", name="admin_event_create")
+     * @Route("/utilisateurs", name="admin_users")
+     */
+    public function userList(UserRepository $users)
+    {
+
+        return $this->render("admin/user.html.twig", [
+            "users" => $users->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/creation", name="creation")
      */
     public function create(Request $request)
     {
-
         $event = new Event();
-        $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
+        $form = $this->createForm(EventType::class, $event); //Création du formulaire, basé sur la classe EventType(différents types d'attributs)
+        $form->handleRequest($request); //Inspecte la requête HTTP
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($event);
-            $this->addFlash('success', "Evenement ajouté avec success");
             $this->em->flush();
+            $this->addFlash('success', "Evénement ajouté avec success !");
 
-            return $this->redirectToRoute('admin_event_index'); //header(location:)
+            return $this->redirectToRoute('event'); //Redirection vers la page du nouvel événement créer
+
         }
-        return $this->render("Admin/create.html.twig", [
+
+        return $this->render("admin/create.html.twig", [
+            "currentmenu" => "event_create",
             "formEvent" => $form->createView()
         ]);
     }

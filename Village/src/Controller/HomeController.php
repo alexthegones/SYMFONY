@@ -43,7 +43,6 @@ class HomeController extends AbstractController
             $events;
         }
 
-
         return $this->render('home.html.twig', [
             "currentmenu" => "home", //(variable/parametre)
             "events" => $events,

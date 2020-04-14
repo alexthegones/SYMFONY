@@ -22,13 +22,15 @@
 			{{event.date | date('H:i')}}
 			<form action="{{ path('event_delete', {id:event.id}) }}" method="POST" onsubmit="return confirm('Etês-vous sûr de vouloir supprimer cet événement ?')">
 				<div class="form-group">
-					<a href="{{ path('event_edit', {id: event.id}) }}" input type="button" class="btn btn-primary">
-						<i class="material-icons">create</i>Modifier l'événement
-					</a>
-					<button type="submit" class="btn btn-danger">
-						<i class="material-icons">delete</i>
-						Supprimer l'événement
-					</button>
+					{% if is_granted('ROLE_ADMIN') %}
+						<a href="{{ path('event_edit', {id: event.id}) }}" input type="button" class="btn btn-primary">
+							<i class="material-icons">create</i>Modifier l'événement
+						</a>
+						<button type="submit" class="btn btn-danger">
+							<i class="material-icons">delete</i>
+							Supprimer l'événement
+						</button>
+					{% endif %}
 				</div>
 			</form>
 			<hr class="my-4">

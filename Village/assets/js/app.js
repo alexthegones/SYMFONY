@@ -1,5 +1,6 @@
 require("../css/app.css");
 
+
 //Affichage date et heure
 var date = document.getElementById("date");
 var aujourdhui = new Date();
@@ -57,16 +58,7 @@ var time = setInterval(function () {
   alertS.style.display = "none";
   clearInterval(time);
 }, 3000);
-// Afficher/Cacher formulaire de contact
-var formC = document.getElementById("formC");
-var btnC = document.getElementById("btnC");
 
-formC.style.display = "none";
-btnC.addEventListener("click", function (e) {
-  e.preventDefault();
-  if (formC.style.display == "block") {
-    formC.style.display = "none";
-  } else {
-    formC.style.display = "block";
-  }
+$("#btnC").click(function () {
+  $("#formC").slideToggle(1000)
 });
