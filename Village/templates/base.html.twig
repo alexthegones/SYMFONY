@@ -70,21 +70,8 @@
 					</li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item">
-						<a class="nav-link zoom">
-							<span>
-								Bonjour
-								{% if not app.user %}
-									Visiteur
-								{% else %}
-									{{ app.user.username }}<div class="cercle"></div>
-								{% endif %}
-							</span>
-						</a>
-
-					</li>
 					{% if not app.user %}
-						<li class="nav-item zoom">
+						<li class="nav-item zoom mr-3">
 							<a class="nav-link {% if currentmenu is defined and currentmenu == 'connexion' %} active {% endif %}" href="/Connexion">
 								<span class="material-icons">
 									lock_open
@@ -98,6 +85,18 @@
 								</span>Déconnexion</a>
 						</li>
 					{% endif %}
+					<li class="nav-item">
+						<a class="nav-link zoom">
+							<span>
+								Bonjour
+								{% if not app.user %}
+									Visiteur
+								{% else %}
+									{{ app.user.username }}<div class="cercle"></div>
+								{% endif %}
+							</span>
+						</a>
+					</li>
 					<li class="nav-item">
 						<a class="nav-link zoom">
 							<span class="material-icons">
