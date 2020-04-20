@@ -1,10 +1,35 @@
-<a class="weatherwidget-io" href="https://forecast7.com/en/48d696d18/nancy/" data-label_1="NANCY" data-label_2="WEATHER" data-theme="original">NANCY WEATHER</a>
+<div class="row m-3">
+	<div class="col-8">
+		<div class="alert alert-warning" role="alert">
+			<span id="blink">
+				<div class="text-center">
+					<h2 class="alert-heading ">
+						<span class="material-icons">
+							warning
+						</span>Informations covid-19 !
+					</h2>
+					<p class="h3">Annulation de tous les événements jusqu'à mi-juillet</p>
+				</div>
+				<hr>
+				<p class="mb-0">Pour plus d'informations, contactez-nous depuis la rubrique
+					<span class="material-icons">
+						contact_support
+					</span>
+					Contact</p>
+			</span>
+		</div>
+	</div>
+	<div class="col-2"></div>
+	<div class="col-2">
+		<img src="https://www.tameteo.com/wimages/fotoa32251e0a1d7764de46f78604d82d0bc.png" class="ml-5">
+	</div>
+</div>
 {% for message in app.flashes('error') %}
 	<div class="alert alert-danger" role="alert">
 		{{ message }}
 	</div>
 {% endfor %}
-<div class="shadow p-3 bg-white rounded m-3">
+<div class="shadow p-2 bg-white rounded m-3">
 	<h5>
 		<span class="material-icons">
 			search
@@ -24,7 +49,7 @@
 </div>
 {{ form_end(form) }}
 {% for event in events %}
-	<div class="card-group d-inline-block">
+	<div class="card-group d-inline-block m-3">
 		<div class="card border-primary m-3 zoom" style="max-width: 35rem;">
 			<div class="card-header">{{ event.lieu }}</div>
 			<div class="card-body">
@@ -47,15 +72,15 @@
 {% endfor %}
 {% block javascript %}
 	<script>
-		!(function (d, s, id) {
-var js,
-fjs = d.getElementsByTagName(s)[0];
-if (! d.getElementById(id)) {
-js = d.createElement(s);
-js.id = id;
-js.src = "https://weatherwidget.io/js/widget.min.js";
-fjs.parentNode.insertBefore(js, fjs);
+		var blink = document.getElementById("blink");
+var clignotement = function () {
+if (blink.style.visibility == "visible") {
+blink.style.visibility = "hidden";
+} else {
+blink.style.visibility = "visible";
 }
-})(document, "script", "weatherwidget-io-js");
+};
+setInterval(clignotement, 1000);
 	</script>
+	<script type="text/javascript" async src="https://www.tameteo.com/wid_loader/0d8a7c2d56792ac7dd2f17bf838a759d"></script>
 {% endblock %}

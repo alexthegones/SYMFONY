@@ -39,8 +39,8 @@
 					<button type="button" class="btn btn-primary" id="btnC">Contactez-nous</button>
 				</p>
 			</div>
-			<div id="formC" style="display:none">
-				<div class="row">
+			<div {% if not formContact.vars.submitted %} style="display:none;" {% endif %}>
+				<div id="formC" class="row">
 					{{ form_start(formContact) }}
 					<div class="col-md-4">
 						{{ form_row(formContact.nom) }}

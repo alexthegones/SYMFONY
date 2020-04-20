@@ -2,15 +2,17 @@
 
 namespace App\Controller;
 
+use DateTime;
+use DateTimeZone;
 use App\Entity\Event;
 use App\Entity\EventSearch;
 use App\Form\EventSearchType;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
 {
@@ -28,6 +30,9 @@ class HomeController extends AbstractController
      */
     public function home(Request $request)
     {
+        //Instanciation Date courante 
+        $currentTime = (new DateTime('now', new DateTimeZone("Europe/Paris")))->format('d/m/Y H:i');
+
         //Filtrage(Search)
         $search = new EventSearch();
         $formSearch = $this->createForm(EventSearchType::class, $search);
@@ -45,6 +50,7 @@ class HomeController extends AbstractController
 
         return $this->render('home.html.twig', [
             "currentmenu" => "home", //(variable/parametre)
+            "dateTime" => $currentTime,
             "events" => $events,
             "form" => $formSearch->createview()
         ]);

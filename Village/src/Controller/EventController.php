@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use DateTime;
+use DateTimeZone;
 use App\Entity\Event;
 use App\Entity\Contact;
 use App\Form\EventType;
@@ -34,6 +36,9 @@ class EventController extends AbstractController
      */
     public function event(PaginatorInterface $paginator, Request $request)
     {
+        //Instanciation Date courante 
+        $currentTime = (new DateTime('now', new DateTimeZone("Europe/Paris")))->format('d/m/Y H:i');
+
         //Filtrage(Search)
         $search = new EventSearch();
         $formSearch = $this->createForm(EventSearchType::class, $search);
@@ -57,6 +62,7 @@ class EventController extends AbstractController
 
         return $this->render('event/event.html.twig', [
             "currentmenu" => "event",
+            "dateTime" => $currentTime,
             "events" => $events,
             "form" => $formSearch->createView()
 

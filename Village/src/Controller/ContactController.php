@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
+use DateTime;
+use DateTimeZone;
 use App\Entity\Contact;
 use App\Form\ContactType;
 use Symfony\Component\Mime\Email;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ContactController extends AbstractController
 {
@@ -19,6 +21,10 @@ class ContactController extends AbstractController
      */
     public function sendEmail(MailerInterface $mailer, Request $request)
     {
+        //Instanciation Date courante 
+        $currentTime = (new DateTime('now', new DateTimeZone("Europe/Paris")))->format('d/m/Y H:i');
+
+        //Instanciation 
         $contact = new Contact();
         $contact->setEvent($contact);
         $formContact = $this->createForm(ContactType::class, $contact);
@@ -33,7 +39,7 @@ class ContactController extends AbstractController
                 // ->from('hello@example.com')
 
                 //Destinataire
-                ->to('cyelle@sfr.fr')
+                ->to('toyou@example.com')
                 //->cc('cc@example.com')
                 //->bcc('bcc@example.com')
 
@@ -54,6 +60,7 @@ class ContactController extends AbstractController
         }
 
         return $this->render('contact.html.twig', [
+            "dateTime" => $currentTime,
             "formContact" => $formContact->createView()
         ]);
     }
