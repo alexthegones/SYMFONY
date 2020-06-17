@@ -49,7 +49,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(name="roles", type="json")
      */
-    public $roles = array();
+    public $roles = [];
 
     
     public function getId(): ?int
@@ -108,4 +108,6 @@ class User implements UserInterface
         }
         return $this->roles;
     }
+
+    
 }

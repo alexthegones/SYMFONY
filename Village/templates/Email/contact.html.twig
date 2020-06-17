@@ -11,6 +11,11 @@
 	<div class="container shadow p-4 bg-white rounded col-sm-5 ">
 		<div class="row">
 			<div class="col-5">
+					{% for message in app.flashes('success') %}
+						<div class="alert alert-success" id="alertC" role="alert">
+							{{ message }}
+						</div>
+					{% endfor %}
 				{{ form_start(formContact) }}
 				<div class="col-md-6">
 					{{ form_row(formContact.nom) }}
@@ -24,11 +29,6 @@
 				{# {{ form_widget(formContact) }} #}
 				<div class="col-md-6">
 					<button type="submit" class="btn btn-primary">Envoyer</button>
-					{% for message in app.flashes('success') %}
-						<div class="alert alert-success" id="alertC" role="alert">
-							{{ message }}
-						</div>
-					{% endfor %}
 				</div>
 				{{ form_end(formContact) }}
 			</div>

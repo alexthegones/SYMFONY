@@ -19,16 +19,48 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class EventController extends AbstractController
 {
     private $repo;
     private $em;
 
-    public function __construct(EventRepository $repo, EntityManagerInterface $em)
+    public function __construct(EventRepository $repo, EntityManagerInterface $em, SessionInterface $session)
     {
         $this->repo = $repo;
         $this->em = $em;
+    }
+    
+    /**
+     * @Route("/", name="home")
+     */
+    public function home(Request $request)
+    {
+        //* Instanciation Date courante 
+        $currentTime = (new DateTime('now', new DateTimeZone("Europe/Paris")))->format('d/m/Y H:i');
+
+        //* Filtrage(Search)
+        $search = new EventSearch();
+        $formSearch = $this->createForm(EventSearchType::class, $search);
+        $formSearch->handleRequest($request);
+
+        $events = $this->repo->findByAll();
+        if (!empty($search)) {
+            if ($formSearch->isSubmitted() && $formSearch->isValid()) {
+                $events = $this->repo->findSearch($search);
+            }
+        } else {
+            //* Récupération de l'ensemble des events de la bdd
+            $events;
+        }
+
+        return $this->render('home.html.twig', [
+            "currentmenu" => "home", //* (variable/parametre)
+            "dateTime" => $currentTime,
+            "events" => $events,
+            "form" => $formSearch->createview()
+        ]);
     }
 
     /**
@@ -38,8 +70,8 @@ class EventController extends AbstractController
     {
         //Instanciation Date courante 
         $currentTime = (new DateTime('now', new DateTimeZone("Europe/Paris")))->format('d/m/Y H:i');
-
-        //Filtrage(Search)
+        
+        //* Filtrage(Search)
         $search = new EventSearch();
         $formSearch = $this->createForm(EventSearchType::class, $search);
         $formSearch->handleRequest($request);
@@ -49,15 +81,15 @@ class EventController extends AbstractController
                 $donnees = $this->repo->findSearch($search);
             }
         } else {
-            //Récupération de l'ensemble des events de la bdd
+            //* Récupération de l'ensemble des events de la bdd
             $donnees;
         }
 
-        //Pagination
+        //* Pagination
         $events = $paginator->paginate(
-            $donnees, //query(list des events)
-            $request->query->getInt('page', 1), //N° de la page en cours, 1 par défaut
-            10 //nb d'event par page
+            $donnees, //* query(list des events)
+            $request->query->getInt('page', 1), //* N° de la page en cours, 1 par défaut
+            10 //* nb d'event par page
         );
 
         return $this->render('event/event.html.twig', [
@@ -65,7 +97,6 @@ class EventController extends AbstractController
             "dateTime" => $currentTime,
             "events" => $events,
             "form" => $formSearch->createView()
-
         ]);
     }
     /**
@@ -75,16 +106,15 @@ class EventController extends AbstractController
     public function create(Request $request)
     {
         $event = new Event();
-        $form = $this->createForm(EventType::class, $event); //Création du formulaire, basé sur la classe EventType(différents types d'attributs)
-        $form->handleRequest($request); //Inspecte la requête HTTP
+        $form = $this->createForm(EventType::class, $event); //* Création du formulaire, basé sur la classe EventType(différents types d'attributs)
+        $form->handleRequest($request); //* Inspecte la requête HTTP
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($event);
             $this->em->flush();
-            $this->addFlash('success', "Evénement ajouté avec success !");
+            $this->addFlash('success', "L'événement {$event->getNom()} ajouté avec succès !");
 
-            return $this->redirectToRoute('event'); //Redirection vers la page du nouvel événement créer
-
+            return $this->redirectToRoute('event'); //* Redirection vers la page du nouvel événement créer
         }
 
         return $this->render("event/create.html.twig", [
@@ -99,15 +129,14 @@ class EventController extends AbstractController
      */
     public function edit(Event $event, Request $request)
     {
-        $form = $this->createForm(EventType::class, $event); //Création du formulaire, basé sur la classe EventType(différents types d'attributs)
-        $form->handleRequest($request); //Inspecte la requête HTTP
+        $form = $this->createForm(EventType::class, $event); //* Création du formulaire, basé sur la classe EventType(différents types d'attributs)
+        $form->handleRequest($request); //* Inspecte la requête HTTP
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
-            $this->addFlash('success', "Evénement modifié avec success !");
+            $this->addFlash('success', "{$event->getNom()} modifié !");
 
-            return $this->redirectToRoute('event_show', ['id' => $event->getid()]); //Redirection vers la route 'home'
-
+            return $this->redirectToRoute('event_show', ['id' => $event->getid()]); //* Redirection vers la route 'home'
         }
         return $this->render("event/edit.html.twig", [
             "formEvent" => $form->createView()
@@ -121,45 +150,45 @@ class EventController extends AbstractController
     {
         $this->em->remove($event);
         $this->em->flush();
-        $this->addFlash('error', "Suppression réussie !");
+        $this->addFlash('error', "Evénement {$event->getNom()} supprimé");
 
-        return $this->redirectToRoute('home'); //Redirection vers la route 'home'
+        return $this->redirectToRoute('home'); //* Redirection vers la route 'home'
     }
     /**
      * @Route("/Evenement/{id}", name="event_show")
      * @param Event $event
      */
-    public function show(Event $event, Request $request, MailerInterface $mailer) //Param converter(lien entre objet event et l'id en question au vue de la route)
+    public function show(Event $event, Request $request, MailerInterface $mailer) //* Param converter(lien entre objet event et l'id en question au vue de la route)
     {
-        //Envoi d'email
+        //* Envoi d'email
         $contact = new Contact();
         $contact->setEvent($contact);
         $formContact = $this->createForm(ContactType::class, $contact);
         $formContact->handleRequest($request);
 
         if ($formContact->isSubmitted() && $formContact->isValid()) {
-            //Envoi d'email
+            //* Envoi d'email
             $email = (new Email())
 
-                //Expéditeur
+                //* Expéditeur
                 ->from(new Address($contact->getEmail(), $contact->getNom()))
                 // ->from('hello@example.com')
 
-                //Destinataire
+                //* Destinataire
                 ->to('you@example.com')
                 //->cc('cc@example.com')
                 //->bcc('bcc@example.com')
 
-                //Répondre à..
+                //* Répondre à..
                 ->replyTo($contact->getEmail())
 
                 //->priority(Email::PRIORITY_HIGH)
 
-                //Sujet du mail
+                //* Sujet du mail
                 ->subject('Time for Symfony Mailer!')
                 ->text('Sending emails is fun again!')
 
-                //Corps du message en format HTML
+                //* Corps du message en format HTML
                 ->html('<p>' . $contact->getmessage() . '</p>');
 
             $mailer->send($email);

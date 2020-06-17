@@ -34,7 +34,7 @@ class ContactType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'placeholder' => "Saisir un message",
-                    'style' => 'width: 250px'
+                    'style' => 'width: 250px',
                 ]
             ])
             

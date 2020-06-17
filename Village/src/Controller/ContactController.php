@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ContactController extends AbstractController
 {
-
     /**
      * @Route("/Contact", name="contact")
      */
@@ -35,7 +34,7 @@ class ContactController extends AbstractController
             $email = (new Email())
 
                 //Expéditeur
-                ->from(new Address($contact->getEmail(), 'Alex'))
+                ->from(new Address($contact->getEmail(), $contact->getNom()))
                 // ->from('hello@example.com')
 
                 //Destinataire
@@ -59,7 +58,7 @@ class ContactController extends AbstractController
             $this->addFlash('success', "Email envoyé avec succès !");
         }
 
-        return $this->render('contact.html.twig', [
+        return $this->render('Email/contact.html.twig', [
             "dateTime" => $currentTime,
             "formContact" => $formContact->createView()
         ]);

@@ -11,10 +11,11 @@
 
 	<div class="shadow p-3 mb-5 bg-white rounded">
 		{% for message in app.flashes('success') %}
-			<div class="alert alert-success" role="alert">
+			<div class="alert alert-success" role="alert" id="alertS">
 				{{ message }}
 			</div>
 		{% endfor %}
+
 		<h5>
 			<span class="material-icons">
 				search
@@ -68,4 +69,13 @@
 		</caption>
 	</div>
 {% endblock %}
-{% block javascripts %}{% endblock %}
+{% block javascripts %}
+	<script>
+		var alertC = document.getElementById("alertS");
+var time = setInterval(function () {
+alertC.style.display = "none";
+clearInterval(time);
+}, 3000);
+	</script>
+
+{% endblock %}

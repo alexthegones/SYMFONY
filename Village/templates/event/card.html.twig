@@ -25,7 +25,7 @@
 	</div>
 </div>
 {% for message in app.flashes('error') %}
-	<div class="alert alert-danger" role="alert">
+	<div class="alert alert-danger" role="alert" id="alertError">
 		{{ message }}
 	</div>
 {% endfor %}
@@ -71,6 +71,7 @@
 	</div>
 {% endfor %}
 {% block javascript %}
+{# {{ encore_entry_script_tags('app') }} #}
 	<script>
 		var blink = document.getElementById("blink");
 var clignotement = function () {
@@ -81,6 +82,6 @@ blink.style.visibility = "visible";
 }
 };
 setInterval(clignotement, 1000);
-	</script>
+
 	<script type="text/javascript" async src="https://www.tameteo.com/wid_loader/0d8a7c2d56792ac7dd2f17bf838a759d"></script>
 {% endblock %}
