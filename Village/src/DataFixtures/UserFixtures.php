@@ -26,14 +26,16 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $userAdmin = new User();
         $userAdmin->setRoles(['ROLE_ADMIN']);
         $userAdmin->setEmail('alex@gmail.com');
+        $userAdmin->setUsername("Alexandre");
         $password = $this->encoder->encodePassword($userAdmin, 'useradmin');
         $userAdmin->setPassword($password);
 
         $manager->persist($userAdmin);
-        
+
         for ($i = 1; $i <= 10; $i++) {
             $user = new User();
             $user->setEmail($faker->email())
+                ->setUsername($faker->userName())
                 ->setPassword($faker->password())
                 ->setRoles(['ROLE_USER']);
 
@@ -42,10 +44,8 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $manager->flush();
     }
 
-     public static function getGroups(): array
+    public static function getGroups(): array
     {
         return ['group2'];
     }
-} 
-
-?>
+}
