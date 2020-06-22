@@ -26,7 +26,7 @@ class EventController extends AbstractController
     private $repo;
     private $em;
 
-    public function __construct(EventRepository $repo, EntityManagerInterface $em, SessionInterface $session)
+    public function __construct(EventRepository $repo, EntityManagerInterface $em)
     {
         $this->repo = $repo;
         $this->em = $em;
@@ -44,15 +44,15 @@ class EventController extends AbstractController
         $search = new EventSearch();
         $formSearch = $this->createForm(EventSearchType::class, $search);
         $formSearch->handleRequest($request);
+        $events =[];
 
-        $events = $this->repo->findByAll();
         if (!empty($search)) {
             if ($formSearch->isSubmitted() && $formSearch->isValid()) {
                 $events = $this->repo->findSearch($search);
             }
         } else {
             //* Récupération de l'ensemble des events de la bdd
-            $events;
+            $events = $this->repo->findByAll();
         }
 
         return $this->render('home.html.twig', [
@@ -70,19 +70,19 @@ class EventController extends AbstractController
     {
         //Instanciation Date courante 
         $currentTime = (new DateTime('now', new DateTimeZone("Europe/Paris")))->format('d/m/Y H:i');
-        
+        $donnees = [];
+
         //* Filtrage(Search)
         $search = new EventSearch();
         $formSearch = $this->createForm(EventSearchType::class, $search);
         $formSearch->handleRequest($request);
-        $donnees = $this->repo->findByAll();
         if (!empty($search)) {
             if ($formSearch->isSubmitted() && $formSearch->isValid()) {
                 $donnees = $this->repo->findSearch($search);
             }
         } else {
             //* Récupération de l'ensemble des events de la bdd
-            $donnees;
+            $donnees = $this->repo->findByAll();
         }
 
         //* Pagination

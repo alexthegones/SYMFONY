@@ -3,16 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(
- * fields= {"email"},
- * message= "L'email a été deja été utilisé.."
- * )
  */
 class User implements UserInterface
 {
@@ -24,34 +19,21 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Email()
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="json")
      */
-    private $username;
+    private $roles = [];
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min="8", minMessage=" Votre mot de passe doit faire au minimum 8 caractères..")
-     * @Assert\EqualTo(propertyPath="confirm_password")
+     * @var string The hashed password
+     * @ORM\Column(type="string")
      */
     private $password;
 
-    /**
-     * @Assert\EqualTo(propertyPath="confirm_password", message="Votre mot de passe doit être identique..")
-     */
-    public $confirm_password;
-
-    /**
-     * @ORM\Column(name="roles", type="json")
-     */
-    public $roles = [];
-
-    
     public function getId(): ?int
     {
         return $this->id;
@@ -69,21 +51,41 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getUsername(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
     {
-        return $this->username;
+        return (string) $this->email;
     }
 
-    public function setUsername(string $username): self
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->username = $username;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
     {
-        return $this->password;
+        return (string) $this->password;
     }
 
     public function setPassword(string $password): self
@@ -93,21 +95,20 @@ class User implements UserInterface
         return $this;
     }
 
-    public function eraseCredentials()
-    {
-    }
-
+    /**
+     * @see UserInterface
+     */
     public function getSalt()
     {
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
-    public function getRoles()
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
     {
-        if (empty($this->roles)) {
-            return ['ROLE_USER'];
-        }
-        return $this->roles;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
-
-    
 }
