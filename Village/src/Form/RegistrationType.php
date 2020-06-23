@@ -15,25 +15,24 @@ class RegistrationType extends AbstractType
         $builder
             ->add('email', null, [
                 'attr' => [
-                    'placeholder' => "Saisir votre adresse mail.."
+                    'placeholder' => "Saisir votre adresse mail..",
                 ]
             ])
             ->add('username', null, [
                 'attr' => [
-                    'placeholder' => "Saisir un identifiant.."
+                    'placeholder' => "Saisir un identifiant..",
                 ]
             ])
             ->add('password', PasswordType::class, [
                 'attr' => [
-                    'placeholder' => "Saisir un mot de passe.."
+                    'placeholder' => "Saisir un mot de passe..",
                 ]
             ])
             ->add('confirm_password', PasswordType::class, [
                 'attr' => [
-                    'placeholder' => "Confirmer votre mot de passe.."
+                    'placeholder' => "Confirmer votre mot de passe..",
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

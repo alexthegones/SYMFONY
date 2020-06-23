@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use DateTime;
+use DateTimeZone;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
@@ -18,6 +20,9 @@ class SecurityController extends AbstractController
      */
     public function registration(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $password)
     {
+        //* Instanciation Date courante 
+        $currentTime = (new DateTime('now', new DateTimeZone("Europe/Paris")))->format('d/m/Y H:i');
+
         $user = new User();
         $formRegister = $this->createForm(RegistrationType::class, $user);
 
@@ -33,7 +38,8 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('security_connexion');
         }
         return $this->render('security/inscription.html.twig', [
-            'formRegister' => $formRegister->createView()
+            'formRegister' => $formRegister->createView(),
+            'dateTime' => $currentTime
         ]);
     }
     /**

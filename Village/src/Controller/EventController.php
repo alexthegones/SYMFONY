@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class EventController extends AbstractController
 {
@@ -55,7 +54,7 @@ class EventController extends AbstractController
         }
 
         return $this->render('home.html.twig', [
-            "currentmenu" => "home", //* (variable/parametre)
+            "currentmenu" => "home", 
             "dateTime" => $currentTime,
             "events" => $events,
             "form" => $formSearch->createview()
@@ -99,11 +98,16 @@ class EventController extends AbstractController
     }
     /**
      * @Route("/Evenement/new", name="event_create")
+     * @Route("/Evenement/edition/{id}", name="event_edit")
      * * @param Request $request
+     * * @param Event $event
      */
-    public function create(Request $request)
+    public function form(Event $event = null, Request $request)
     {
-        $event = new Event();
+        if (!$event) {
+            $event = new Event();
+        }
+
         $form = $this->createForm(EventType::class, $event); //* Création du formulaire, basé sur la classe EventType(différents types d'attributs)
         $form->handleRequest($request); //* Inspecte la requête HTTP
 
@@ -117,27 +121,8 @@ class EventController extends AbstractController
 
         return $this->render("event/create.html.twig", [
             "currentmenu" => "event_create",
-            "formEvent" => $form->createView()
-        ]);
-    }
-    /**
-     * @Route("/Evenement/edition/{id}", name="event_edit")
-     * @param Event $event 
-     * @param Request $request
-     */
-    public function edit(Event $event, Request $request)
-    {
-        $form = $this->createForm(EventType::class, $event); //* Création du formulaire, basé sur la classe EventType(différents types d'attributs)
-        $form->handleRequest($request); //* Inspecte la requête HTTP
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
-            $this->addFlash('success', "{$event->getNom()} modifié !");
-
-            return $this->redirectToRoute('event_show', ['id' => $event->getid()]); //* Redirection vers la route 'home'
-        }
-        return $this->render("event/edit.html.twig", [
-            "formEvent" => $form->createView()
+            "formEvent" => $form->createView(),
+            'editEvent' => $event->getId() !== null,
         ]);
     }
     /**

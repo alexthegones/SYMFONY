@@ -21,6 +21,12 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $username;
+
     /**
      * @ORM\Column(type="json")
      */
@@ -29,14 +35,14 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Length(min="6", minMessage="Votre mot de passe doit contenir au moins 6 caractères")
+     * @Assert\EqualTo(propertyPath="confirm_password")
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @Assert\EqualTo(propertyPath="password")
      */
-    private $username;
-
     private $confirm_password;
 
     public function getId(): ?int
