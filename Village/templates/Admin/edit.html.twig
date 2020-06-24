@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  User
+  {{ user.id }}
+{% endblock %}
+
+{% block body %}
+  <h1 class="display-4 text-center shadow p-3 mb-5 bg-white rounded">
+    Edition Utilisateur {{ user.username }}
+  </h1>
+  <div class="container shadow p-3 mb-5 bg-white rounded col-sm-6 col-sm-push-3">
+    {{ form_start(formUser) }}
+    {{ form_rest(formUser) }}
+    <button type="submit" class="btn btn-primary">
+      <span class="material-icons">edit</span>Modifier
+    </button>
+    {{ form_end(formUser) }}
+  </div>
+
+  {% block javascripts %}
+  {% endblock %}
+{% endblock %}

@@ -66,7 +66,7 @@ class EventController extends AbstractController
      */
     public function event(PaginatorInterface $paginator, Request $request)
     {
-        //Instanciation Date courante 
+        //* Instanciation Date courante 
         $currentTime = (new DateTime('now', new DateTimeZone("Europe/Paris")))->format('d/m/Y H:i');
         
         $donnees = $this->repo->findByAll();
@@ -98,7 +98,7 @@ class EventController extends AbstractController
     }
     /**
      * @Route("/Evenement/new", name="event_create")
-     * @Route("/Evenement/edition/{id}", name="event_edit")
+     * @Route("/Evenement/edit/{id}", name="event_edit")
      * * @param Request $request
      * * @param Event $event
      */

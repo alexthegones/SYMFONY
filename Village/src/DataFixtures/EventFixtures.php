@@ -21,7 +21,7 @@ class EventFixtures extends Fixture implements FixtureGroupInterface
             $event->setNom($faker->name())
                 ->setDescription($faker->paragraph())
                 ->setLieu($faker->city())
-                ->setDate($faker->dateTime());
+                ->setDate($faker->dateTimeThisDecade());
 
             $manager->persist($event);
         }

@@ -23,7 +23,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $username;
 
@@ -69,7 +69,14 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
+    }
+    
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
     }
 
     /**
@@ -80,17 +87,17 @@ class User implements UserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
+        
         return array_unique($roles);
     }
-
+    
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
+        
         return $this;
     }
-
+    
     /**
      * @see UserInterface
      */
@@ -98,10 +105,22 @@ class User implements UserInterface
     {
         return (string) $this->password;
     }
-
+    
     public function setPassword(string $password): self
     {
         $this->password = $password;
+        
+        return $this;
+    }
+    
+    public function getConfirmPassword(): ?string
+    {
+        return $this->confirm_password;
+    }
+
+    public function setConfirmPassword(string $confirm_password): self
+    {
+        $this->confirm_password = $confirm_password;
 
         return $this;
     }
@@ -123,22 +142,4 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    public function getConfirmPassword(): ?string
-    {
-        return $this->confirm_password;
-    }
-
-    public function setConfirmPassword(string $confirm_password): self
-    {
-        $this->confirm_password = $confirm_password;
-
-        return $this;
-    }
 }
